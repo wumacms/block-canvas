@@ -34,23 +34,23 @@
 
 1. 克隆项目
 ```bash
-git clone https://github.com/wumacms/blockcanvas.git
-cd blockcanvas
+git clone https://github.com/wumacms/block-canvas.git
+cd block-canvas
 ```
 
 2. 安装依赖
 ```bash
-npm install
+pnpm install
 ```
 
 3. 启动开发服务器
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 4. 构建生产版本
 ```bash
-npm run build
+pnpm run build
 ```
 
 ## 使用指南
@@ -71,38 +71,6 @@ npm run build
 ### 清空画布
 1. 点击画布右上角的清空按钮
 2. 确认后所有组件将被移除
-
-## 自定义组件
-
-要添加自定义组件，编辑 `src/components/App.vue` 中的 `componentLibrary` 数组：
-
-```javascript
-const componentLibrary = ref([
-  {
-    id: 4,
-    name: "我的组件",
-    type: "custom",
-    props: { text: "默认文本", color: "#000000" }
-  }
-]);
-```
-
-## 浏览器支持
-
-- Chrome 60+
-- Firefox 60+
-- Safari 12+
-- Edge 79+
-
-## 贡献指南
-
-欢迎提交 Issue 和 Pull Request！
-
-1. Fork 本项目
-2. 创建特性分支 (`git checkout -b feature/AmazingFeature`)
-3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
-4. 推送到分支 (`git push origin feature/AmazingFeature`)
-5. 开启 Pull Request
 
 ## 许可证
 
