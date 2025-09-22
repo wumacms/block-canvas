@@ -239,7 +239,7 @@
                                 </div>
                                 <div class="footer-bottom" :style="{ backgroundColor: element.props.bottomBgColor }">
                                     <p :style="{ color: element.props.copyrightColor }">{{ element.props.copyrightText
-                                        }}</p>
+                                    }}</p>
                                 </div>
                             </div>
 
