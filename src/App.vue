@@ -123,175 +123,18 @@
                     <template #item="{ element }">
                         <div class="block" :class="{ selected: selectedBlock?.id === element.id }"
                             @click.stop="selectBlock(element)" :style="getBlockStyle(element)">
-                            <!-- 网页区块渲染 -->
-                            <div v-if="element.type === 'hero'" class="hero-block">
-                                <h1 :style="{ color: element.props.titleColor }">{{ element.props.title }}</h1>
-                                <p :style="{ color: element.props.subtitleColor }">{{ element.props.subtitle }}</p>
-                                <button :style="{
-                                    backgroundColor: element.props.buttonBgColor,
-                                    color: element.props.buttonTextColor
-                                }">{{ element.props.buttonText }}</button>
-                            </div>
 
-                            <div v-else-if="element.type === 'image-text'" class="image-text-block"
-                                :class="element.props.layout">
-                                <div class="text-content">
-                                    <h2 :style="{ color: element.props.titleColor }">{{ element.props.title }}</h2>
-                                    <p :style="{ color: element.props.textColor }">{{ element.props.content }}</p>
-                                </div>
-                                <div class="image-placeholder" :style="{ backgroundColor: element.props.imageBgColor }">
-                                    {{ element.props.imagePlaceholder }}
-                                </div>
-                            </div>
+                            <!-- 网页区块组件 -->
+                            <HeroBlock v-if="element.type === 'hero'" :props="element.props" />
+                            <ImageTextBlock v-else-if="element.type === 'image-text'" :props="element.props" />
+                            <FeaturesBlock v-else-if="element.type === 'features'" :props="element.props" />
+                            <TestimonialsBlock v-else-if="element.type === 'testimonials'" :props="element.props" />
+                            <PricingBlock v-else-if="element.type === 'pricing'" :props="element.props" />
+                            <CTABlock v-else-if="element.type === 'cta'" :props="element.props" />
+                            <FooterBlock v-else-if="element.type === 'footer'" :props="element.props" />
+                            <TeamBlock v-else-if="element.type === 'team'" :props="element.props" />
+                            <ContactBlock v-else-if="element.type === 'contact'" :props="element.props" />
 
-                            <div v-else-if="element.type === 'features'" class="features-block">
-                                <h2 :style="{ color: element.props.titleColor, textAlign: 'center' }">{{
-                                    element.props.title }}</h2>
-                                <div class="features-grid"
-                                    :style="{ gridTemplateColumns: `repeat(${element.props.columns}, 1fr)` }">
-                                    <div v-for="(feature, index) in element.props.features" :key="index"
-                                        class="feature-item">
-                                        <h3 :style="{ color: element.props.featureTitleColor }">{{ feature.title }}</h3>
-                                        <p :style="{ color: element.props.featureTextColor }">{{ feature.description }}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div v-else-if="element.type === 'testimonials'" class="testimonials-block">
-                                <h2 :style="{ color: element.props.titleColor, textAlign: 'center' }">{{
-                                    element.props.title }}</h2>
-                                <div class="testimonials-grid"
-                                    :style="{ gridTemplateColumns: `repeat(${element.props.columns}, 1fr)` }">
-                                    <div v-for="(testimonial, index) in element.props.testimonials" :key="index"
-                                        class="testimonial-item">
-                                        <div class="testimonial-content">
-                                            <p :style="{ color: element.props.textColor }">"{{ testimonial.content }}"
-                                            </p>
-                                        </div>
-                                        <div class="testimonial-author">
-                                            <h4 :style="{ color: element.props.authorColor }">{{ testimonial.name }}
-                                            </h4>
-                                            <p :style="{ color: element.props.roleColor }">{{ testimonial.role }}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div v-else-if="element.type === 'pricing'" class="pricing-block">
-                                <h2 :style="{ color: element.props.titleColor, textAlign: 'center' }">{{
-                                    element.props.title }}</h2>
-                                <div class="pricing-grid"
-                                    :style="{ gridTemplateColumns: `repeat(${element.props.columns}, 1fr)` }">
-                                    <div v-for="(plan, index) in element.props.plans" :key="index" class="pricing-plan">
-                                        <h3 :style="{ color: element.props.planTitleColor }">{{ plan.name }}</h3>
-                                        <div class="price" :style="{ color: element.props.priceColor }">{{ plan.price }}
-                                        </div>
-                                        <ul class="features-list">
-                                            <li v-for="(feature, fIndex) in plan.features" :key="fIndex"
-                                                :style="{ color: element.props.featureColor }">{{ feature }}</li>
-                                        </ul>
-                                        <button :style="{
-                                            backgroundColor: element.props.buttonBgColor,
-                                            color: element.props.buttonTextColor
-                                        }">{{ plan.buttonText }}</button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div v-else-if="element.type === 'cta'" class="cta-block">
-                                <h2 :style="{ color: element.props.titleColor }">{{ element.props.title }}</h2>
-                                <p :style="{ color: element.props.textColor }">{{ element.props.content }}</p>
-                                <div class="cta-buttons">
-                                    <button :style="{
-                                        backgroundColor: element.props.primaryButtonBgColor,
-                                        color: element.props.primaryButtonTextColor
-                                    }">{{ element.props.primaryButtonText }}</button>
-                                    <button :style="{
-                                        backgroundColor: element.props.secondaryButtonBgColor,
-                                        color: element.props.secondaryButtonTextColor,
-                                        border: `1px solid ${element.props.secondaryButtonBorderColor}`
-                                    }">{{ element.props.secondaryButtonText }}</button>
-                                </div>
-                            </div>
-
-                            <div v-else-if="element.type === 'footer'" class="footer-block">
-                                <div class="footer-content">
-                                    <div class="footer-section">
-                                        <h3 :style="{ color: element.props.titleColor }">{{ element.props.companyName }}
-                                        </h3>
-                                        <p :style="{ color: element.props.textColor }">{{
-                                            element.props.companyDescription }}</p>
-                                    </div>
-                                    <div class="footer-links">
-                                        <div v-for="(linkGroup, index) in element.props.linkGroups" :key="index"
-                                            class="link-group">
-                                            <h4 :style="{ color: element.props.linkTitleColor }">{{ linkGroup.title }}
-                                            </h4>
-                                            <ul>
-                                                <li v-for="(link, lIndex) in linkGroup.links" :key="lIndex">
-                                                    <a :href="link.url" :style="{ color: element.props.linkColor }">{{
-                                                        link.text }}</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="footer-bottom" :style="{ backgroundColor: element.props.bottomBgColor }">
-                                    <p :style="{ color: element.props.copyrightColor }">{{ element.props.copyrightText
-                                        }}</p>
-                                </div>
-                            </div>
-
-                            <div v-else-if="element.type === 'team'" class="team-block">
-                                <h2 :style="{ color: element.props.titleColor, textAlign: 'center' }">{{
-                                    element.props.title }}</h2>
-                                <div class="team-grid"
-                                    :style="{ gridTemplateColumns: `repeat(${element.props.columns}, 1fr)` }">
-                                    <div v-for="(member, index) in element.props.members" :key="index"
-                                        class="team-member">
-                                        <div class="member-image"
-                                            :style="{ backgroundColor: element.props.imageBgColor }">
-                                            {{ member.initials }}
-                                        </div>
-                                        <h3 :style="{ color: element.props.nameColor }">{{ member.name }}</h3>
-                                        <p :style="{ color: element.props.roleColor }">{{ member.role }}</p>
-                                        <p :style="{ color: element.props.bioColor }">{{ member.bio }}</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div v-else-if="element.type === 'contact'" class="contact-block">
-                                <h2 :style="{ color: element.props.titleColor, textAlign: 'center' }">{{
-                                    element.props.title }}</h2>
-                                <div class="contact-content">
-                                    <div class="contact-info">
-                                        <div v-for="(info, index) in element.props.contactInfo" :key="index"
-                                            class="info-item">
-                                            <h4 :style="{ color: element.props.infoTitleColor }">{{ info.title }}</h4>
-                                            <p :style="{ color: element.props.infoTextColor }">{{ info.details }}</p>
-                                        </div>
-                                    </div>
-                                    <div class="contact-form">
-                                        <input type="text" placeholder="姓名" :style="{
-                                            border: `1px solid ${element.props.inputBorderColor}`,
-                                            color: element.props.inputTextColor
-                                        }">
-                                        <input type="email" placeholder="邮箱" :style="{
-                                            border: `1px solid ${element.props.inputBorderColor}`,
-                                            color: element.props.inputTextColor
-                                        }">
-                                        <textarea placeholder="消息" :style="{
-                                            border: `1px solid ${element.props.inputBorderColor}`,
-                                            color: element.props.inputTextColor
-                                        }"></textarea>
-                                        <button :style="{
-                                            backgroundColor: element.props.buttonBgColor,
-                                            color: element.props.buttonTextColor
-                                        }">发送消息</button>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </template>
                 </draggable>
@@ -737,300 +580,306 @@
     </div>
 </template>
 
-<script>
+<script setup>
 import { ref } from 'vue';
 import draggable from 'vuedraggable';
 
-export default {
-    name: 'WebBuilder',
-    components: {
-        draggable
+// 导入组件
+import HeroBlock from '@/components/block/HeroBlock.vue';
+import ImageTextBlock from '@/components/block/ImageTextBlock.vue';
+import FeaturesBlock from '@/components/block/FeaturesBlock.vue';
+import TestimonialsBlock from '@/components/block/TestimonialsBlock.vue';
+import PricingBlock from '@/components/block/PricingBlock.vue';
+import CTABlock from '@/components/block/CTABlock.vue';
+import FooterBlock from '@/components/block/FooterBlock.vue';
+import TeamBlock from '@/components/block/TeamBlock.vue';
+import ContactBlock from '@/components/block/ContactBlock.vue';
+
+
+// 网页区块组件库
+const webBlocks = ref([
+    {
+        id: 'hero',
+        type: 'hero',
+        name: 'Hero 区块',
+        props: {
+            title: '欢迎来到我们的网站',
+            titleColor: '#333333',
+            subtitle: '这是一个精彩的Hero区块，用于展示您的主要信息',
+            subtitleColor: '#666666',
+            buttonText: '了解更多',
+            buttonBgColor: '#4f46e5',
+            buttonTextColor: '#ffffff',
+            bgColor: '#f9fafb'
+        }
     },
-    setup() {
-        // 网页区块组件库
-        const webBlocks = ref([
-            {
-                id: 'hero',
-                type: 'hero',
-                name: 'Hero 区块',
-                props: {
-                    title: '欢迎来到我们的网站',
-                    titleColor: '#333333',
-                    subtitle: '这是一个精彩的Hero区块，用于展示您的主要信息',
-                    subtitleColor: '#666666',
-                    buttonText: '了解更多',
-                    buttonBgColor: '#4f46e5',
-                    buttonTextColor: '#ffffff',
-                    bgColor: '#f9fafb'
+    {
+        id: 'image-text',
+        type: 'image-text',
+        name: '图文区块',
+        props: {
+            layout: 'text-left',
+            title: '图文区块标题',
+            titleColor: '#333333',
+            content: '这是一个图文区块，可以展示图片和相关的文本内容。您可以根据需要调整布局方式。',
+            textColor: '#666666',
+            imagePlaceholder: '图片占位符',
+            imageBgColor: '#e5e7eb',
+            bgColor: '#ffffff'
+        }
+    },
+    {
+        id: 'features',
+        type: 'features',
+        name: '特性展示',
+        props: {
+            title: '我们的核心特性',
+            titleColor: '#333333',
+            columns: 3,
+            featureTitleColor: '#333333',
+            featureTextColor: '#666666',
+            bgColor: '#f9fafb',
+            features: [
+                { title: '特性一', description: '这是第一个特性的描述文本' },
+                { title: '特性二', description: '这是第二个特性的描述文本' },
+                { title: '特性三', description: '这是第三个特性的描述文本' }
+            ]
+        }
+    },
+    {
+        id: 'testimonials',
+        type: 'testimonials',
+        name: '客户评价',
+        props: {
+            title: '客户评价',
+            titleColor: '#333333',
+            columns: 3,
+            textColor: '#666666',
+            authorColor: '#333333',
+            roleColor: '#666666',
+            bgColor: '#ffffff',
+            testimonials: [
+                { name: '张三', role: 'CEO, 公司A', content: '这是一个非常棒的产品，我们非常满意！' },
+                { name: '李四', role: '设计师, 公司B', content: '设计精美，用户体验极佳。' },
+                { name: '王五', role: '开发者, 公司C', content: '功能强大，易于集成和使用。' }
+            ]
+        }
+    },
+    {
+        id: 'pricing',
+        type: 'pricing',
+        name: '定价方案',
+        props: {
+            title: '选择适合您的方案',
+            titleColor: '#333333',
+            columns: 3,
+            planTitleColor: '#333333',
+            priceColor: '#4f46e5',
+            featureColor: '#666666',
+            buttonBgColor: '#4f46e5',
+            buttonTextColor: '#ffffff',
+            bgColor: '#f9fafb',
+            plans: [
+                {
+                    name: '基础版',
+                    price: '¥99/月',
+                    buttonText: '立即购买',
+                    features: ['功能一', '功能二', '功能三'],
+                    featuresText: "功能一\n功能二\n功能三"
+                },
+                {
+                    name: '专业版',
+                    price: '¥199/月',
+                    buttonText: '立即购买',
+                    features: ['功能一', '功能二', '功能三', '功能四'],
+                    featuresText: "功能一\n功能二\n功能三\n功能四"
+                },
+                {
+                    name: '企业版',
+                    price: '¥399/月',
+                    buttonText: '立即购买',
+                    features: ['所有功能', '优先支持', '专属客服'],
+                    featuresText: "所有功能\n优先支持\n专属客服"
                 }
-            },
-            {
-                id: 'image-text',
-                type: 'image-text',
-                name: '图文区块',
-                props: {
-                    layout: 'text-left',
-                    title: '图文区块标题',
-                    titleColor: '#333333',
-                    content: '这是一个图文区块，可以展示图片和相关的文本内容。您可以根据需要调整布局方式。',
-                    textColor: '#666666',
-                    imagePlaceholder: '图片占位符',
-                    imageBgColor: '#e5e7eb',
-                    bgColor: '#ffffff'
-                }
-            },
-            {
-                id: 'features',
-                type: 'features',
-                name: '特性展示',
-                props: {
-                    title: '我们的核心特性',
-                    titleColor: '#333333',
-                    columns: 3,
-                    featureTitleColor: '#333333',
-                    featureTextColor: '#666666',
-                    bgColor: '#f9fafb',
-                    features: [
-                        { title: '特性一', description: '这是第一个特性的描述文本' },
-                        { title: '特性二', description: '这是第二个特性的描述文本' },
-                        { title: '特性三', description: '这是第三个特性的描述文本' }
+            ]
+        }
+    },
+    {
+        id: 'cta',
+        type: 'cta',
+        name: '行动号召',
+        props: {
+            title: '立即开始使用我们的产品',
+            titleColor: '#333333',
+            content: '加入数千满意客户的行列，体验我们产品的卓越性能。',
+            textColor: '#666666',
+            primaryButtonText: '开始免费试用',
+            primaryButtonBgColor: '#4f46e5',
+            primaryButtonTextColor: '#ffffff',
+            secondaryButtonText: '了解更多',
+            secondaryButtonBgColor: 'transparent',
+            secondaryButtonTextColor: '#4f46e5',
+            secondaryButtonBorderColor: '#4f46e5',
+            bgColor: '#f9fafb'
+        }
+    },
+    {
+        id: 'footer',
+        type: 'footer',
+        name: '页脚',
+        props: {
+            companyName: '您的公司名称',
+            companyDescription: '提供优质的产品和服务',
+            titleColor: '#333333',
+            textColor: '#666666',
+            linkTitleColor: '#333333',
+            linkColor: '#666666',
+            bottomBgColor: '#f3f4f6',
+            copyrightText: '© 2023 您的公司名称。保留所有权利。',
+            copyrightColor: '#666666',
+            bgColor: '#ffffff',
+            linkGroups: [
+                {
+                    title: '产品',
+                    links: [
+                        { text: '功能', url: '#' },
+                        { text: '定价', url: '#' },
+                        { text: '案例', url: '#' }
+                    ]
+                },
+                {
+                    title: '支持',
+                    links: [
+                        { text: '帮助中心', url: '#' },
+                        { text: '联系我们', url: '#' }
                     ]
                 }
-            },
-            {
-                id: 'testimonials',
-                type: 'testimonials',
-                name: '客户评价',
-                props: {
-                    title: '客户评价',
-                    titleColor: '#333333',
-                    columns: 3,
-                    textColor: '#666666',
-                    authorColor: '#333333',
-                    roleColor: '#666666',
-                    bgColor: '#ffffff',
-                    testimonials: [
-                        { name: '张三', role: 'CEO, 公司A', content: '这是一个非常棒的产品，我们非常满意！' },
-                        { name: '李四', role: '设计师, 公司B', content: '设计精美，用户体验极佳。' },
-                        { name: '王五', role: '开发者, 公司C', content: '功能强大，易于集成和使用。' }
-                    ]
-                }
-            },
-            {
-                id: 'pricing',
-                type: 'pricing',
-                name: '定价方案',
-                props: {
-                    title: '选择适合您的方案',
-                    titleColor: '#333333',
-                    columns: 3,
-                    planTitleColor: '#333333',
-                    priceColor: '#4f46e5',
-                    featureColor: '#666666',
-                    buttonBgColor: '#4f46e5',
-                    buttonTextColor: '#ffffff',
-                    bgColor: '#f9fafb',
-                    plans: [
-                        {
-                            name: '基础版',
-                            price: '¥99/月',
-                            buttonText: '立即购买',
-                            features: ['功能一', '功能二', '功能三'],
-                            featuresText: "功能一\n功能二\n功能三"
-                        },
-                        {
-                            name: '专业版',
-                            price: '¥199/月',
-                            buttonText: '立即购买',
-                            features: ['功能一', '功能二', '功能三', '功能四'],
-                            featuresText: "功能一\n功能二\n功能三\n功能四"
-                        },
-                        {
-                            name: '企业版',
-                            price: '¥399/月',
-                            buttonText: '立即购买',
-                            features: ['所有功能', '优先支持', '专属客服'],
-                            featuresText: "所有功能\n优先支持\n专属客服"
-                        }
-                    ]
-                }
-            },
-            {
-                id: 'cta',
-                type: 'cta',
-                name: '行动号召',
-                props: {
-                    title: '立即开始使用我们的产品',
-                    titleColor: '#333333',
-                    content: '加入数千满意客户的行列，体验我们产品的卓越性能。',
-                    textColor: '#666666',
-                    primaryButtonText: '开始免费试用',
-                    primaryButtonBgColor: '#4f46e5',
-                    primaryButtonTextColor: '#ffffff',
-                    secondaryButtonText: '了解更多',
-                    secondaryButtonBgColor: 'transparent',
-                    secondaryButtonTextColor: '#4f46e5',
-                    secondaryButtonBorderColor: '#4f46e5',
-                    bgColor: '#f9fafb'
-                }
-            },
-            {
-                id: 'footer',
-                type: 'footer',
-                name: '页脚',
-                props: {
-                    companyName: '您的公司名称',
-                    companyDescription: '提供优质的产品和服务',
-                    titleColor: '#333333',
-                    textColor: '#666666',
-                    linkTitleColor: '#333333',
-                    linkColor: '#666666',
-                    bottomBgColor: '#f3f4f6',
-                    copyrightText: '© 2023 您的公司名称。保留所有权利。',
-                    copyrightColor: '#666666',
-                    bgColor: '#ffffff',
-                    linkGroups: [
-                        {
-                            title: '产品',
-                            links: [
-                                { text: '功能', url: '#' },
-                                { text: '定价', url: '#' },
-                                { text: '案例', url: '#' }
-                            ]
-                        },
-                        {
-                            title: '支持',
-                            links: [
-                                { text: '帮助中心', url: '#' },
-                                { text: '联系我们', url: '#' }
-                            ]
-                        }
-                    ]
-                }
-            },
-            {
-                id: 'team',
-                type: 'team',
-                name: '团队介绍',
-                props: {
-                    title: '认识我们的团队',
-                    titleColor: '#333333',
-                    columns: 3,
-                    nameColor: '#333333',
-                    roleColor: '#666666',
-                    bioColor: '#666666',
-                    imageBgColor: '#e5e7eb',
-                    bgColor: '#ffffff',
-                    members: [
-                        { name: '张三', role: '首席执行官', initials: 'ZS', bio: '拥有10年行业经验' },
-                        { name: '李四', role: '首席设计师', initials: 'LS', bio: '设计思维倡导者' },
-                        { name: '王五', role: '技术总监', initials: 'WW', bio: '全栈开发专家' }
-                    ]
-                }
-            },
-            {
-                id: 'contact',
-                type: 'contact',
-                name: '联系我们',
-                props: {
-                    title: '联系我们',
-                    titleColor: '#333333',
-                    infoTitleColor: '#333333',
-                    infoTextColor: '#666666',
-                    inputBorderColor: '#d1d5db',
-                    inputTextColor: '#333333',
-                    buttonBgColor: '#4f46e5',
-                    buttonTextColor: '#ffffff',
-                    bgColor: '#f9fafb',
-                    contactInfo: [
-                        { title: '地址', details: '北京市朝阳区某某大厦' },
-                        { title: '电话', details: '+86 123-4567-8900' },
-                        { title: '邮箱', details: 'contact@example.com' }
-                    ]
-                }
-            }
-        ]);
+            ]
+        }
+    },
+    {
+        id: 'team',
+        type: 'team',
+        name: '团队介绍',
+        props: {
+            title: '认识我们的团队',
+            titleColor: '#333333',
+            columns: 3,
+            nameColor: '#333333',
+            roleColor: '#666666',
+            bioColor: '#666666',
+            imageBgColor: '#e5e7eb',
+            bgColor: '#ffffff',
+            members: [
+                { name: '张三', role: '首席执行官', initials: 'ZS', bio: '拥有10年行业经验' },
+                { name: '李四', role: '首席设计师', initials: 'LS', bio: '设计思维倡导者' },
+                { name: '王五', role: '技术总监', initials: 'WW', bio: '全栈开发专家' }
+            ]
+        }
+    },
+    {
+        id: 'contact',
+        type: 'contact',
+        name: '联系我们',
+        props: {
+            title: '联系我们',
+            titleColor: '#333333',
+            infoTitleColor: '#333333',
+            infoTextColor: '#666666',
+            inputBorderColor: '#d1d5db',
+            inputTextColor: '#333333',
+            buttonBgColor: '#4f46e5',
+            buttonTextColor: '#ffffff',
+            bgColor: '#f9fafb',
+            contactInfo: [
+                { title: '地址', details: '北京市朝阳区某某大厦' },
+                { title: '电话', details: '+86 123-4567-8900' },
+                { title: '邮箱', details: 'contact@example.com' }
+            ]
+        }
+    }
+]);
 
-        // 画布上的组件
-        const canvasBlocks = ref([]);
-        const selectedBlock = ref(null);
-        const isDragging = ref(false);
+// 画布上的组件
+const canvasBlocks = ref([]);
+const selectedBlock = ref(null);
+const isDragging = ref(false);
 
-        // 克隆组件（确保每个拖拽的组件都是独立的）
-        const cloneComponent = (component) => {
-            return JSON.parse(JSON.stringify({
-                ...component,
-                id: `${component.type}-${Date.now()}`
-            }));
-        };
+// 克隆组件（确保每个拖拽的组件都是独立的）
+const cloneComponent = (component) => {
+    return JSON.parse(JSON.stringify({
+        ...component,
+        id: `${component.type}-${Date.now()}`
+    }));
+};
 
-        // 选择组件
-        const selectBlock = (block) => {
-            selectedBlock.value = block;
-        };
+// 选择组件
+const selectBlock = (block) => {
+    selectedBlock.value = block;
+};
 
-        // 取消选择组件
-        const deselectBlock = () => {
-            if (!isDragging.value) {
-                selectedBlock.value = null;
-            }
-        };
+// 取消选择组件
+const deselectBlock = () => {
+    if (!isDragging.value) {
+        selectedBlock.value = null;
+    }
+};
 
-        // 删除组件
-        const removeBlock = () => {
-            if (selectedBlock.value) {
-                const index = canvasBlocks.value.findIndex(block => block.id === selectedBlock.value.id);
-                if (index !== -1) {
-                    canvasBlocks.value.splice(index, 1);
-                    selectedBlock.value = null;
-                }
-            }
-        };
+// 删除组件
+const removeBlock = () => {
+    if (selectedBlock.value) {
+        const index = canvasBlocks.value.findIndex(block => block.id === selectedBlock.value.id);
+        if (index !== -1) {
+            canvasBlocks.value.splice(index, 1);
+            selectedBlock.value = null;
+        }
+    }
+};
 
-        // 清空画布
-        const clearCanvas = () => {
-            if (confirm('确定要清空画布吗？')) {
-                canvasBlocks.value = [];
-                selectedBlock.value = null;
-            }
-        };
+// 清空画布
+const clearCanvas = () => {
+    if (confirm('确定要清空画布吗？')) {
+        canvasBlocks.value = [];
+        selectedBlock.value = null;
+    }
+};
 
-        // 导出配置
-        const exportConfig = () => {
-            const config = JSON.stringify(canvasBlocks.value, null, 2);
-            const blob = new Blob([config], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'page-config.json';
-            a.click();
-            URL.revokeObjectURL(url);
-        };
+// 导出配置
+const exportConfig = () => {
+    const config = JSON.stringify(canvasBlocks.value, null, 2);
+    const blob = new Blob([config], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'page-config.json';
+    a.click();
+    URL.revokeObjectURL(url);
+};
 
-        // 导出HTML文件
-        const exportHTML = () => {
-            if (canvasBlocks.value.length === 0) {
-                alert('画布为空，无法导出HTML');
-                return;
-            }
+// 导出HTML文件
+const exportHTML = () => {
+    if (canvasBlocks.value.length === 0) {
+        alert('画布为空，无法导出HTML');
+        return;
+    }
 
-            const htmlContent = generateHTML();
-            const blob = new Blob([htmlContent], { type: 'text/html' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'website.html';
-            a.click();
-            URL.revokeObjectURL(url);
-        };
+    const htmlContent = generateHTML();
+    const blob = new Blob([htmlContent], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'website.html';
+    a.click();
+    URL.revokeObjectURL(url);
+};
 
-        // 生成HTML内容
-        const generateHTML = () => {
-            const blocksHTML = canvasBlocks.value.map(block => {
-                return generateBlockHTML(block);
-            }).join('\n');
+// 生成HTML内容
+const generateHTML = () => {
+    const blocksHTML = canvasBlocks.value.map(block => {
+        return generateBlockHTML(block);
+    }).join('\n');
 
-            return `<!DOCTYPE html>
+    return `<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -1098,15 +947,15 @@ export default {
     ${blocksHTML}
 </body>
 </html>`;
-        };
+};
 
-        // 生成单个区块的HTML
-        const generateBlockHTML = (block) => {
-            const style = `background-color: ${block.props.bgColor || 'transparent'};`;
+// 生成单个区块的HTML
+const generateBlockHTML = (block) => {
+    const style = `background-color: ${block.props.bgColor || 'transparent'};`;
 
-            switch (block.type) {
-                case 'hero':
-                    return `
+    switch (block.type) {
+        case 'hero':
+            return `
     <div class="hero-block" style="${style}">
         <div class="container">
             <h1 style="color: ${block.props.titleColor}">${block.props.title}</h1>
@@ -1117,8 +966,8 @@ export default {
         </div>
     </div>`;
 
-                case 'image-text':
-                    return `
+        case 'image-text':
+            return `
     <div class="image-text-block ${block.props.layout}" style="${style}">
         <div class="container">
             <div class="text-content">
@@ -1131,8 +980,8 @@ export default {
         </div>
     </div>`;
 
-                case 'features':
-                    return `
+        case 'features':
+            return `
     <div class="features-block" style="${style}">
         <div class="container">
             <h2 style="color: ${block.props.titleColor}; text-align: center">${block.props.title}</h2>
@@ -1147,8 +996,8 @@ export default {
         </div>
     </div>`;
 
-                case 'testimonials':
-                    return `
+        case 'testimonials':
+            return `
     <div class="testimonials-block" style="${style}">
         <div class="container">
             <h2 style="color: ${block.props.titleColor}; text-align: center">${block.props.title}</h2>
@@ -1168,8 +1017,8 @@ export default {
         </div>
     </div>`;
 
-                case 'pricing':
-                    return `
+        case 'pricing':
+            return `
     <div class="pricing-block" style="${style}">
         <div class="container">
             <h2 style="color: ${block.props.titleColor}; text-align: center">${block.props.title}</h2>
@@ -1192,8 +1041,8 @@ export default {
         </div>
     </div>`;
 
-                case 'cta':
-                    return `
+        case 'cta':
+            return `
     <div class="cta-block" style="${style}">
         <div class="container">
             <h2 style="color: ${block.props.titleColor}">${block.props.title}</h2>
@@ -1209,8 +1058,8 @@ export default {
         </div>
     </div>`;
 
-                case 'footer':
-                    return `
+        case 'footer':
+            return `
     <div class="footer-block" style="${style}">
         <div class="footer-content">
             <div class="footer-section">
@@ -1235,8 +1084,8 @@ export default {
         </div>
     </div>`;
 
-                case 'team':
-                    return `
+        case 'team':
+            return `
     <div class="team-block" style="${style}">
         <div class="container">
             <h2 style="color: ${block.props.titleColor}; text-align: center">${block.props.title}</h2>
@@ -1255,8 +1104,8 @@ export default {
         </div>
     </div>`;
 
-                case 'contact':
-                    return `
+        case 'contact':
+            return `
     <div class="contact-block" style="${style}">
         <div class="container">
             <h2 style="color: ${block.props.titleColor}; text-align: center">${block.props.title}</h2>
@@ -1279,62 +1128,43 @@ export default {
         </div>
     </div>`;
 
-                default:
-                    return `
+        default:
+            return `
     <div class="block" style="${style}">
         <div class="container">
             <h3>${block.type} 区块</h3>
             <p>此区块类型暂不支持HTML导出预览</p>
         </div>
     </div>`;
-            }
-        };
+    }
+};
 
-        // 获取区块样式
-        const getBlockStyle = (element) => {
-            return {
-                backgroundColor: element.props.bgColor || 'transparent'
-            };
-        };
+// 获取区块样式
+const getBlockStyle = (element) => {
+    return {
+        backgroundColor: element.props.bgColor || 'transparent'
+    };
+};
 
-        // 拖拽开始
-        const dragStart = () => {
-            isDragging.value = true;
-        };
+// 拖拽开始
+const dragStart = () => {
+    isDragging.value = true;
+};
 
-        // 拖拽结束
-        const dragEnd = () => {
-            isDragging.value = false;
-        };
+// 拖拽结束
+const dragEnd = () => {
+    isDragging.value = false;
+};
 
-        // 更新定价方案特性
-        const updatePlanFeatures = (index, featuresText) => {
-            if (selectedBlock.value && selectedBlock.value.type === 'pricing') {
-                selectedBlock.value.props.plans[index].features = featuresText.split('\n').filter(f => f.trim());
-            }
-        };
-
-        return {
-            webBlocks,
-            canvasBlocks,
-            selectedBlock,
-            cloneComponent,
-            selectBlock,
-            deselectBlock,
-            removeBlock,
-            clearCanvas,
-            exportConfig,
-            exportHTML,
-            getBlockStyle,
-            dragStart,
-            dragEnd,
-            updatePlanFeatures
-        };
+// 更新定价方案特性
+const updatePlanFeatures = (index, featuresText) => {
+    if (selectedBlock.value && selectedBlock.value.type === 'pricing') {
+        selectedBlock.value.props.plans[index].features = featuresText.split('\n').filter(f => f.trim());
     }
 };
 </script>
 
-<style>
+<style scoped>
 * {
     box-sizing: border-box;
     margin: 0;
@@ -1489,383 +1319,6 @@ body {
 .block.selected {
     border: 2px solid #4f46e5;
     box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
-}
-
-/* 网页区块样式 */
-.hero-block {
-    text-align: center;
-    padding: 40px 20px;
-}
-
-.hero-block h1 {
-    font-size: 2.5rem;
-    margin-bottom: 16px;
-}
-
-.hero-block p {
-    font-size: 1.2rem;
-    margin-bottom: 24px;
-    color: #666;
-}
-
-.hero-block button {
-    padding: 12px 24px;
-    font-size: 1rem;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-}
-
-.image-text-block {
-    display: flex;
-    gap: 24px;
-    padding: 24px;
-}
-
-.image-text-block.text-left {
-    flex-direction: row;
-}
-
-.image-text-block.text-right {
-    flex-direction: row-reverse;
-}
-
-.image-text-block.text-top {
-    flex-direction: column;
-}
-
-.text-content {
-    flex: 1;
-}
-
-.text-content h2 {
-    margin-bottom: 16px;
-    font-size: 1.8rem;
-}
-
-.text-content p {
-    line-height: 1.6;
-    color: #666;
-}
-
-.image-placeholder {
-    flex: 1;
-    height: 200px;
-    background: #e5e7eb;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #6b7280;
-    border-radius: 6px;
-}
-
-.features-block {
-    padding: 40px 20px;
-}
-
-.features-block h2 {
-    margin-bottom: 32px;
-    font-size: 2rem;
-}
-
-.features-grid {
-    display: grid;
-    gap: 24px;
-}
-
-.feature-item {
-    text-align: center;
-    padding: 20px;
-}
-
-.feature-item h3 {
-    margin-bottom: 12px;
-    font-size: 1.3rem;
-}
-
-.feature-item p {
-    color: #666;
-    line-height: 1.6;
-}
-
-.testimonials-block {
-    padding: 40px 20px;
-}
-
-.testimonials-block h2 {
-    margin-bottom: 32px;
-    font-size: 2rem;
-}
-
-.testimonials-grid {
-    display: grid;
-    gap: 24px;
-}
-
-.testimonial-item {
-    background: white;
-    padding: 24px;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.testimonial-content {
-    margin-bottom: 16px;
-    font-style: italic;
-}
-
-.testimonial-author h4 {
-    margin-bottom: 4px;
-}
-
-.pricing-block {
-    padding: 40px 20px;
-}
-
-.pricing-block h2 {
-    margin-bottom: 32px;
-    font-size: 2rem;
-}
-
-.pricing-grid {
-    display: grid;
-    gap: 24px;
-}
-
-.pricing-plan {
-    background: white;
-    padding: 32px 24px;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    text-align: center;
-}
-
-.pricing-plan h3 {
-    margin-bottom: 16px;
-    font-size: 1.5rem;
-}
-
-.price {
-    font-size: 2.5rem;
-    font-weight: bold;
-    margin-bottom: 24px;
-}
-
-.features-list {
-    list-style: none;
-    margin-bottom: 24px;
-}
-
-.features-list li {
-    padding: 8px 0;
-    border-bottom: 1px solid #e5e7eb;
-}
-
-.features-list li:last-child {
-    border-bottom: none;
-}
-
-.pricing-plan button {
-    width: 100%;
-    padding: 12px;
-    border: none;
-    border-radius: 6px;
-    font-size: 1rem;
-    cursor: pointer;
-}
-
-.cta-block {
-    text-align: center;
-    padding: 60px 40px;
-}
-
-.cta-block h2 {
-    margin-bottom: 16px;
-    font-size: 2.2rem;
-}
-
-.cta-block p {
-    margin-bottom: 32px;
-    font-size: 1.2rem;
-    color: #666;
-}
-
-.cta-buttons {
-    display: flex;
-    gap: 16px;
-    justify-content: center;
-}
-
-.cta-buttons button {
-    padding: 12px 24px;
-    font-size: 1rem;
-    border-radius: 6px;
-    cursor: pointer;
-}
-
-.cta-buttons button:first-child {
-    border: none;
-}
-
-.cta-buttons button:last-child {
-    background: transparent;
-}
-
-.footer-block {
-    background: white;
-}
-
-.footer-content {
-    display: flex;
-    justify-content: space-between;
-    padding: 40px;
-    gap: 40px;
-}
-
-.footer-section {
-    flex: 1;
-}
-
-.footer-section h3 {
-    margin-bottom: 16px;
-    font-size: 1.5rem;
-}
-
-.footer-section p {
-    color: #666;
-    line-height: 1.6;
-}
-
-.footer-links {
-    display: flex;
-    gap: 40px;
-}
-
-.link-group h4 {
-    margin-bottom: 16px;
-    font-size: 1.1rem;
-}
-
-.link-group ul {
-    list-style: none;
-}
-
-.link-group li {
-    margin-bottom: 8px;
-}
-
-.link-group a {
-    text-decoration: none;
-    color: #666;
-    transition: color 0.2s;
-}
-
-.link-group a:hover {
-    color: #4f46e5;
-}
-
-.footer-bottom {
-    padding: 20px 40px;
-    text-align: center;
-}
-
-.team-block {
-    padding: 40px 20px;
-}
-
-.team-block h2 {
-    margin-bottom: 32px;
-    font-size: 2rem;
-}
-
-.team-grid {
-    display: grid;
-    gap: 24px;
-}
-
-.team-member {
-    text-align: center;
-    padding: 24px;
-}
-
-.member-image {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    background: #e5e7eb;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 16px;
-    font-weight: bold;
-    font-size: 1.5rem;
-}
-
-.team-member h3 {
-    margin-bottom: 8px;
-    font-size: 1.3rem;
-}
-
-.team-member p {
-    color: #666;
-    margin-bottom: 8px;
-}
-
-.contact-block {
-    padding: 40px 20px;
-}
-
-.contact-block h2 {
-    margin-bottom: 32px;
-    font-size: 2rem;
-}
-
-.contact-content {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 40px;
-}
-
-.contact-info {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-}
-
-.info-item h4 {
-    margin-bottom: 8px;
-    font-size: 1.2rem;
-}
-
-.info-item p {
-    color: #666;
-}
-
-.contact-form {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
-
-.contact-form input,
-.contact-form textarea {
-    padding: 12px;
-    border: 1px solid #d1d5db;
-    border-radius: 6px;
-    font-size: 1rem;
-}
-
-.contact-form textarea {
-    min-height: 120px;
-    resize: vertical;
-}
-
-.contact-form button {
-    padding: 12px;
-    border: none;
-    border-radius: 6px;
-    font-size: 1rem;
-    cursor: pointer;
 }
 
 /* 右侧面板样式 */
