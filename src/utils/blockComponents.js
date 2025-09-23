@@ -9,7 +9,6 @@ import TeamBlock from '@/components/block/TeamBlock.vue';
 import ContactBlock from '@/components/block/ContactBlock.vue';
 
 // 将区块组件映射到对应的标识符
-
 export const blockComponents = {
     hero: HeroBlock,
     'image-text': ImageTextBlock,
